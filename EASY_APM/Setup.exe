@@ -1,0 +1,161 @@
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ##############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+# ld.so.conf 신규 설정
+if [ $ARCH = 'x86_64' ];
+    then
+    echo "This machine is 64 bit"
+    cp $EASY_APM_CONF/ns-ld-so-x64.conf /etc/ld.so.conf.d/ns-ld-so-x64.conf
+    else
+    echo "This machine is 32 bit"
+    cp $EASY_APM_CONF/ns-ld-so-x86.conf /etc/ld.so.conf.d/ns-ld-so-x86.conf
+fi
+
+ldconfig
+
+
+# 설치파일 압축해제
+sh EXTRACT_SRC.sh
+
+
+# CentOS-7 or Ubuntu-14 일경우 패치
+if [ $LINUX_VER == "Ubuntu-14" ] || [ $LINUX_VER == "CentOS-7" ];
+then
+    echo "need patch : libiconv"
+    cd $EASY_APM_SOURCE/$EASY_APM_APP_ICONV
+    patch -p0 < $EASY_APM_PATCH/libiconv-1.14_glibc2.16.patch
+    systemctl enable rc-local
+else
+    echo "no need patch : libiconv"
+fi
+cd $EASY_APM_DIR
+
+
+# cmake
+sh install_cmake
+
+
+# mysql
+sh install_mariadb_10.0
+
+
+# zlib
+cd $EASY_APM_SOURCE/$EASY_APM_APP_ZLIB
+./configure --shared
+make
+make install
+ldconfig
+
+
+# libxml2 (dependency for php)
+cd $EASY_APM_SOURCE/$EASY_APM_APP_LIBXML2
+./configure --enable-shared --with-zlib=$DEST_DIR
+make
+make install
+
+
+# expat (dependency for mod_security)
+cd $EASY_APM_SOURCE/$EASY_APM_APP_EXPAT
+./configure --enable-shared
+make
+make install
+
+
+# curl (dependency for php)
+cd $EASY_APM_SOURCE/$EASY_APM_APP_CURL
+./configure --prefix=$DEST_DIR/curl --with-ssl --enable-shared
+make
+make install
+
+
+# Basic Library Update
+ldconfig
+
+
+# Install modules for Web Server (Apache & nginx)
+cd $EASY_APM_DIR
+sh install_mod4was
+
+
+# Web Server Install
+cd $EASY_APM_DIR
+sh install_httpd_2.4
+
+
+# GD (include freetype2, libjpeg, libtiff, libpng)
+cd $EASY_APM_DIR
+sh install_gd
+
+
+# libmcrypt
+cd $EASY_APM_SOURCE/$EASY_APM_APP_LIBMCRYPT
+./configure --enable-shared
+make
+make install
+
+
+# mhash
+cd $EASY_APM_SOURCE/$EASY_APM_APP_MHASH
+./configure --enable-shared
+make
+make install
+ldconfig
+
+
+# mcrypt
+cd $EASY_APM_SOURCE/$EASY_APM_APP_MCRYPT
+./configure --prefix=$DEST_DIR/mcrypt --enable-shared
+make
+make install
+
+
+# libxslt
+cd $EASY_APM_SOURCE/$EASY_APM_APP_LIBXSLT
+./configure --enable-shared --with-libxml-prefix=$DEST_DIR
+make
+make install
+
+
+# libiconv
+cd $EASY_APM_SOURCE/$EASY_APM_APP_ICONV
+./configure --prefix=$DEST_DIR/iconv --enable-shared
+make
+make install
+
+
+# Basic Library Update
+ldconfig
+
+
+# PHP Install
+cd $EASY_APM_DIR
+sh install_php5.4
+sh install_zendguard
+
+
+# PROFTPD Install
+sh install_proftp
+
+
+# rc.local
+cd $EASY_APM_DIR
+cat $EASY_APM_CONF/rc.local >> /etc/rc.d/rc.local
+chmod a+x /etc/rc.local
+
+
+# profile
+cp $EASY_APM_CONF/EASY_APM_PROFILE.sh /etc/profile.d/
+
+
+# logrotate
+cp $EASY_APM_CONF/EASY_APM_LOG.sh /etc/logrotate.d/
+
+
+
+echo "============================================"
+echo "====== 수고하셨습니다 ======================"
+echo "============================================"

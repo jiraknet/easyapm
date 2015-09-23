@@ -1,0 +1,76 @@
+[mysqld]
+port            = 3306
+socket          = /tmp/mysql.sock
+key_buffer=512M
+max_allowed_packet=64M
+table_open_cache=2048
+table_definition_cache=400
+sort_buffer=2M
+read_buffer_size=2M
+thread_cache_size=32
+#thread_concurrency=8
+myisam_sort_buffer_size=32M
+max_connections=512
+wait_timeout=60
+long_query_time=10
+query_cache_size=64M
+open_files_limit=8192
+character_set_client_handshake = FALSE
+character_set_server=utf8
+init_connect = "set names utf8"
+skip_name_resolve
+skip_external_locking
+default_storage_engine=aria
+local_infile=0
+
+slow_query_log = 1
+slow_query_log_file = /usr/local/mariadb/data/slow.log
+log_error = /usr/local/mariadb/data/error.log
+
+
+######### InnoDB Config BEGIN ##########################################
+innodb=1 # 0:not use innodb, 1:use innodb
+innodb_status_file=1
+innodb_file_per_table=1
+innodb_data_home_dir = /usr/local/mariadb/data
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_log_group_home_dir = /usr/local/mariadb/data
+innodb_buffer_pool_size = 512M
+innodb_file_io_threads = 4
+innodb_thread_concurrency = 8
+innodb_flush_log_at_trx_commit = 1
+sync_binlog = 1
+innodb_log_files_in_group=4
+innodb_log_file_size=64M
+innodb_log_buffer_size=8M
+innodb_lock_wait_timeout=120
+innodb_read_io_threads=4
+innodb_write_io_threads=4
+#innodb_force_recovery = 4
+######### InnoDB Config END ############################################
+
+
+[mysqldump]
+quick
+max_allowed_packet=64M
+extended_insert=TRUE
+default_character_set=utf8
+
+[mysql]
+no_auto_rehash
+prompt=mysql (\d)>
+
+[isamchk]
+key_buffer=256M
+sort_buffer=256M
+read_buffer=2M
+write_buffer=2M
+
+[myisamchk]
+key_buffer=256M
+sort_buffer=256M
+read_buffer=2M
+write_buffer=2M
+
+[mysqlhotcopy]
+interactive_timeout

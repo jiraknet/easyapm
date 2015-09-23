@@ -1,0 +1,45 @@
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ##############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+groupadd mysql
+useradd -gmysql -d /home/mysql -r -s /bin/false mysql
+
+cd $EASY_APM_SOURCE/$EASY_APM_APP_MARIADB_10_0
+$DEST_DIR/cmake/bin/cmake \
+-DCMAKE_INSTALL_PREFIX:PATH=$DEST_DIR/mariadb \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DWITH_PARTITION_STORAGE_ENGINE=1 \
+-DWITH_PERFSCHEMA_STORAGE_ENGINE=1 \
+-DWITH_FEDERATEDX_STORAGE_ENGINE=1 \
+-DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+-DWITH_ARIA_STORAGE_ENGINE=1 \
+-DWITH_XTRADB_STORAGE_ENGINE=1 \
+-DWITH_SPHINX_STORAGE_ENGINE=1 \
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DWITH_EXTRA_CHARSETS=all \
+-DWITH_SSL=bundled \
+-DWITH_ZLIB=system \
+-DWITH_READLINE=1 \
+-DENABLED_LOCAL_INFILE=1
+
+make VERBOSE=1
+make install
+
+ln -s $DEST_DIR/mariadb $DEST_DIR/mysql
+
+
+cd $DEST_DIR/mariadb
+cp $EASY_APM_CONF/my.cnf_mariadb_10.0 /etc/my.cnf
+chmod 600 /etc/my.cnf
+scripts/mysql_install_db --user=mysql
+chown -R mysql.mysql $DEST_DIR/mariadb/data
+
+
+chmod 700 $DEST_DIR/mariadb/support-files/mysql.server
+cp -rvp $DEST_DIR/mariadb/support-files/mysql.server /etc/init.d/

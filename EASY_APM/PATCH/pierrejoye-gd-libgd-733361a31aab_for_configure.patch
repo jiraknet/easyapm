@@ -1,0 +1,15 @@
+diff -Nur pierrejoye-gd-libgd-733361a31aab/src/configure.ac pierrejoye-gd-libgd-733361a31aab_/src/configure.ac
+--- pierrejoye-gd-libgd-733361a31aab/src/configure.ac	2011-06-17 16:09:25.000000000 +0900
++++ pierrejoye-gd-libgd-733361a31aab_/src/configure.ac	2012-11-08 17:57:04.000000000 +0900
+@@ -61,11 +61,6 @@
+ AC_HEADER_STDC
+ AC_CHECK_HEADERS([errno.h limits.h stddef.h stdlib.h string.h unistd.h])
+ 
+-AM_ICONV
+-# if test -n "$LIBICONV" ; then
+-#   LIBS="$LIBS $LIBICONV"
+-# fi
+-
+ AC_CHECK_HEADERS(iconv.h,
+   [AC_MSG_CHECKING(whether iconv.h defines iconv_t)
+    AC_EGREP_HEADER([typedef.*iconv_t],iconv.h,

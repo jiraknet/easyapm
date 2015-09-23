@@ -1,0 +1,18 @@
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ##############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+cd $EASY_APM_SOURCE/$EASY_APM_APP_PROFTPD
+./configure \
+--prefix=$DEST_DIR/proftpd \
+--sysconfdir=/etc \
+--localstatedir=/var/run \
+--enable-nls \
+--enable-autoshadow
+make
+make install
+
+cp $EASY_APM_CONF/proftpd.conf /etc/

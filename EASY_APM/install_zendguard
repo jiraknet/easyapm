@@ -1,0 +1,22 @@
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ##############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+
+if [ $ARCH = 'x86_64' ];
+    then
+        echo 'x86_64'
+        cp $EASY_APM_SOURCE/$EASY_APM_APP_ZENDGUARD_54_64/php-5.4.x/ZendGuardLoader.so /usr/local/lib/
+    else
+        echo 'i386'
+        cp $EASY_APM_SOURCE/$EASY_APM_APP_ZENDGUARD_54_32/php-5.4.x/ZendGuardLoader.so /usr/local/lib/
+fi
+
+        
+cat <<ZZZ>> $DEST_DIR/lib/php.ini
+        
+zend_extension=/usr/local/lib/ZendGuardLoader.so
+ZZZ

@@ -1,0 +1,49 @@
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+cp -rvp $EASY_APM_SOURCE/$EASY_APM_APP_APR $EASY_APM_SOURCE/$EASY_APM_APP_HTTPD_2_4/srclib/apr
+cp -rvp $EASY_APM_SOURCE/$EASY_APM_APP_APR_UTIL $EASY_APM_SOURCE/$EASY_APM_APP_HTTPD_2_4/srclib/apr-util
+
+
+cd $EASY_APM_SOURCE/$EASY_APM_APP_HTTPD_2_4
+CFLAGS="-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64" \
+LIBS=-lpthread \
+./configure --prefix=$DEST_DIR/httpd2 \
+--enable-modules=all \
+--enable-charset-lite \
+--enable-so \
+--with-included-apr \
+--enable-mpms-shared=all \
+--with-pcre=$DEST_DIR/pcre
+
+make
+make install
+ldconfig
+
+mv $DEST_DIR/httpd2/conf $DEST_DIR/httpd2/conf_org
+cp -rvp $EASY_APM_CONF/conf_httpd_2.4 $DEST_DIR/httpd2/conf
+
+# mod_url
+cd $EASY_APM_SOURCE/APACHE_MODULES/mod_url-apache2.4
+$DEST_DIR/httpd2/bin/apxs -i -a -c mod_url.c
+
+# create document root
+mkdir -p /home/$DOMAIN_NAME/docs
+cp $EASY_APM_CONF/example/* /home/$DOMAIN_NAME/docs/
+
+cat <<NNN>> $DEST_DIR/httpd2/conf/extra/httpd-vhosts.conf
+
+<VirtualHost *:80>
+    ServerAdmin $MANAGE_MAIL
+    DocumentRoot /home/$DOMAIN_NAME/docs
+    ServerName $DOMAIN_NAME
+    ServerAlias www.$DOMAIN_NAME
+    CustomLog logs/$DOMAIN_NAME-access_log common
+    ErrorLog logs/$DOMAIN_NAME-error_log
+</VirtualHost>
+
+NNN

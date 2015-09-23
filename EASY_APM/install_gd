@@ -1,0 +1,48 @@
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ##############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+# libpng
+cd $EASY_APM_SOURCE/$EASY_APM_APP_LIBPNG
+./configure --enable-shared
+make
+make install
+ldconfig
+
+# freetype2 ( after install libpng : need libpng.so )
+cd $EASY_APM_SOURCE/$EASY_APM_APP_FREETYPE2
+./configure --prefix=$DEST_DIR/freetype2
+make
+make install
+# (only > freetype-2.5.1)
+ln -s /usr/local/freetype2/include/freetype2 /usr/local/freetype2/include/freetype2/freetype
+
+# jpeg
+cd $EASY_APM_SOURCE/$EASY_APM_APP_LIBJPEG
+mkdir -p $DEST_DIR/man/man1
+./configure --enable-shared
+make
+make install
+
+# tiff
+cd $EASY_APM_SOURCE/$EASY_APM_APP_LIBTIFF
+./configure --enable-shared \
+--with-jpeg-include-dir=$DEST_DIR/include \
+--with-jpeg-lib-dir=$DEST_DIR/lib
+make
+make install
+
+# gd
+cd $EASY_APM_SOURCE/$EASY_APM_APP_GD
+patch -p1 < $EASY_APM_PATCH/pierrejoye-gd-libgd-733361a31aab_for_configure.patch
+cd $EASY_APM_SOURCE/$EASY_APM_APP_GD/src
+ln -s ../config config
+ln -s ../test test
+sh bootstrap.sh
+autoreconf -fvi
+./configure --prefix=$DEST_DIR/gd --with-png=$DEST_DIR --with-freetype=$DEST_DIR/freetype2 --with-jpeg=$DEST_DIR
+make
+make install

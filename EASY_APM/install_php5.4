@@ -1,0 +1,61 @@
+#!/bin/sh
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+cd $EASY_APM_SOURCE/$EASY_APM_APP_PHP_5_4
+
+
+CFLAGS="-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fpic" \
+./configure \
+--with-apxs2=$DEST_DIR/httpd2/bin/apxs \
+--with-mysql=$DEST_DIR/mysql \
+--with-pdo-mysql=$DEST_DIR/mysql \
+--with-gd \
+--enable-gd-native-ttf \
+--with-freetype-dir=$DEST_DIR/freetype2 \
+--with-jpeg-dir=$DEST_DIR \
+--with-png-dir=$DEST_DIR \
+--with-zlib \
+--enable-ftp \
+--disable-debug \
+--enable-sockets \
+--with-gettext \
+--enable-shared \
+--with-gdbm \
+--with-kerberos \
+--with-mcrypt=$DEST_DIR/mcrypt \
+--with-mhash=$DEST_DIR \
+--with-libxml-dir=$DEST_DIR \
+--with-xmlrpc \
+--enable-dom \
+--with-iconv=$DEST_DIR/iconv \
+--with-curl=$DEST_DIR/curl \
+--enable-mbstring \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-sysvmsg \
+--with-xsl \
+--with-openssl \
+--enable-soap \
+--enable-exif \
+--enable-bcmath
+
+make
+make install
+cp $EASY_APM_CONF/php.ini-dist-Ver5.4 $DEST_DIR/lib/php.ini
+
+
+# mysqli
+cd $EASY_APM_SOURCE/$EASY_APM_APP_PHP_5_4/ext/mysqli
+phpize
+./configure --with-php-config=$DEST_DIR/bin/php-config --with-mysqli=$DEST_DIR/mysql/bin/mysql_config
+make
+make install
+#mkdir -p $DEST_DIR/lib/php/extensions
+#cp modules/mysqli.so $DEST_DIR/lib/php/extensions
+
+

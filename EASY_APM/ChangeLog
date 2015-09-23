@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+Version : EASY_APM-1.0.0 (20150911)
+
+1. 패치설명
+- libiconv-1.14_glibc2.16.patch
+glibc-2.16 이상에서 libiconv-1.14(최신버전) 설치시 오류가 발생
+이를 해결하기 위해서 상위버전의 glibc를 사용하는
+ CentOS7
+ Ubuntu-14 LTS
+두개 버전에서는 해당 패치를 수행하도록 처리
+
+
+- lua-5.2.2-shared_library-2.patch
+lua 설치시 liblua.so 파일을 생성하도록 처리하는 패치
+
+
+- pierrejoye-gd-libgd-733361a31aab_for_configure.patch
+gd(pierrejoye-gd-libgd-733361a31aab) 패키지 설치시 configure 를 사용할 수 있도록 처리하는 패치
+
+
+2. 그 외는 README 참고

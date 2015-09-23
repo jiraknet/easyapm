@@ -1,0 +1,39 @@
+#!/bin/sh
+############# EASY_APM BASIC ENV SET ############################
+EASY_APM_DIR="/usr/local/src/EASY_APM"
+source $EASY_APM_DIR/EASY_APM_ENV.sh
+##################################################################
+
+
+#pcre install (dependency for apache and mod_security)
+cd $EASY_APM_SOURCE/$EASY_APM_APP_PCRE
+./configure --prefix=$DEST_DIR/pcre --enable-shared
+make
+make install
+ldconfig
+
+
+# apr
+cd $EASY_APM_SOURCE/$EASY_APM_APP_APR
+./configure --prefix=$DEST_DIR/apr --enable-shared
+make
+make install
+
+
+# apr-util
+cd $EASY_APM_SOURCE/$EASY_APM_APP_APR_UTIL
+./configure --prefix=$DEST_DIR/apr --with-apr=$DEST_DIR/apr --enable-shared
+make
+make install
+
+echo "$DEST_DIR/apr/lib" > /etc/ld.so.conf.d/apr.conf
+ldconfig
+
+
+#lua install (dependency for mod_security)
+cd $EASY_APM_SOURCE/$EASY_APM_APP_LUA
+patch -p1 < $EASY_APM_PATCH/lua-5.2.2-shared_library-2.patch
+make linux
+make install
+cp -rvp $EASY_APM_SOURCE/$EASY_APM_APP_LUA/src/liblua.so* $DEST_DIR/lib/
+ldconfig

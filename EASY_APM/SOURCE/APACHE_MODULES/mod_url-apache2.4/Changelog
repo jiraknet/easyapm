@@ -1,0 +1,53 @@
+mod_url Apache 2 module Changelog
+# $Id: Changelog,v 1.9 2012/01/24 17:19:11 oops Exp $
+
+http://modurl.kldp.net
+
+* 2012/01/25 JoungKyun.Kim <http://oops.org>
+- bug #315267: fixed compile warnging with libiconv
+
+* 2008/10/21 JoungKyun.Kim <http://oops.org>
+- bug #350907: wrong declear return variable of iconv return
+- bug #305132: fixed memory leak
+
+* 2007/12/24 JoungKyun.Kim <http://oops.org>
+- patch #304683: support Windows NT system
+
+* 2007/11/21 JoungKyun.Kim <http://oops.org>
+- bug #304642: under over glibc 2.3, miss checking iconv result status
+
+* 2007/11/10 JoungKyun.Kim <http://oops.org>
+- bug #304629: fixed content-type ploblems on internal replace path mode
+
+* 2007/11/09 JoungKyun.Kim <http://oops.org>
+- fixed memory leak
+
+* 2007/06/11 JoungKyun.Kim <http://oops.org>
+- fixed gabage character of iconv return value
+
+* 2007/06/01 JoungKyun.Kim <http://oops.org>
+- rewrite check_redurl_encode with pointer
+- fixed segfault when fail memory allocation
+
+* 2007/05/30 JoungKyun.Kim <http://oops.org>
+- changed redurl design
+- add new check_redurl_encode function for IE7 with Apache License :-)
+
+* 2004/11/21 JoungKyun.Kim <http://oops.org>
+- added default value of ServerEncoding and ClientEncoding option
+  ServerEncoding: EUC-KR
+  ClientEncoding: UTF-8
+
+* 2004/08/03 Won-kyu Park <wkpark@kldp.net>
+- add 'ServerEncoding' 'ClientEncoding' options
+- add per-dir support
+
+* 2002/07/09 JoungKyun.Kim <http://oops.org>
+- porting Apache 2 module
+
+* 2000/10/11 Won-kyu Park <wkpark@kldp.net>
+- fixed for glibc-2.1.x glibc-2.2
+
+* 2000/03/29 Won-kyu Park <wkpark@kldp.net>
+- Initial release
+
