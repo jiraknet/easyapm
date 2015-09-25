@@ -12,6 +12,10 @@
 - EASY_APM을 이용한 설치시 발생하는 문제는 사용자 본인에게 있음을 알려드립니다.
 
 
+EASY_APM 디렉토리를 /usr/local/EASY_APM 으로 이동시킨 후 사용하시기 바랍니다.
+mv EASY_APM /usr/local/EASY_APM
+
+
 
 1. config.ini 수정
 vi 등의 편집기를 이용해서 수정하세요
