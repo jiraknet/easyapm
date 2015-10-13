@@ -12,8 +12,10 @@ cd $EASY_APM_SOURCE/$EASY_APM_APP_PHP_5_4
 CFLAGS="-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fpic" \
 ./configure \
 --with-apxs2=$DEST_DIR/httpd2/bin/apxs \
---with-mysql=$DEST_DIR/mysql \
---with-pdo-mysql=$DEST_DIR/mysql \
+--enable-mysqlnd \
+--with-mysql=mysqlnd \
+--with-mysqli=mysqlnd \
+--with-pdo-mysql=mysqlnd \
 --with-gd \
 --enable-gd-native-ttf \
 --with-freetype-dir=$DEST_DIR/freetype2 \
@@ -48,14 +50,5 @@ make
 make install
 cp $EASY_APM_CONF/php.ini-dist-Ver5.4 $DEST_DIR/lib/php.ini
 
-
-# mysqli
-cd $EASY_APM_SOURCE/$EASY_APM_APP_PHP_5_4/ext/mysqli
-phpize
-./configure --with-php-config=$DEST_DIR/bin/php-config --with-mysqli=$DEST_DIR/mysql/bin/mysql_config
-make
-make install
-#mkdir -p $DEST_DIR/lib/php/extensions
-#cp modules/mysqli.so $DEST_DIR/lib/php/extensions
 
 
